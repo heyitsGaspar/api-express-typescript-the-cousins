@@ -13,4 +13,18 @@ export class ProductSupabaseRepository implements ProductRepository {
         }
         return data as Product[];
     }
+
+    async postProduct(product: Product): Promise<Product> {
+        const {data, error} = await supabaseClient
+            .from('products')
+            .insert([product])
+            .select('*')
+            .single();
+
+        if (error) {
+            throw new Error(`Error inserting product: ${error.message}`);
+        }
+
+        return data as Product;
+    }
 }
