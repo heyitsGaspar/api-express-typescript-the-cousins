@@ -24,4 +24,4 @@ export const postProductController = async (req: Request, res: Response, next: N
     } catch (error: any) {
         res.status(error.statusCode || 500).json({ message: error.message });
     }
-};  
+}; 

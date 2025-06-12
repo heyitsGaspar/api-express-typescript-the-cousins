@@ -27,4 +27,18 @@ export class ProductSupabaseRepository implements ProductRepository {
 
         return data as Product;
     }
+
+    async getProductById(is: string): Promise<Product | null> {
+        const {data, error} = await supabaseClient
+            .from('products')
+            .select('*')
+            .eq('id', is)
+            .single();
+
+        if (error) {
+            throw new Error(`Error fetching product by id: ${error.message}`);
+        }
+
+        return data as Product | null;
+    }
 }
