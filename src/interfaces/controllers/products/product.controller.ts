@@ -3,6 +3,7 @@ import { GetAllProductUseCase } from '../../../application/use-cases/products/ge
 import { ProductSupabaseRepository } from '../../../infraestructure/repositories/products/productSupabaseRepository';
 import { CreateProduct } from '../../../application/use-cases/products/createProduct';
 import { GetProductById } from '../../../application/use-cases/products/getProductById';
+import { UpdateProduct } from '../../../application/use-cases/products/updateProduct';
 
 
 const productRepository = new ProductSupabaseRepository();
@@ -36,6 +37,18 @@ export const getProductByIdController = async (req: Request, res: Response, next
             return res.status(404).json({ message: 'Product not found' });
         }
         res.json(product);
+    } catch (error: any) {
+        res.status(error.statusCode || 500).json({ message: error.message });
+    }
+};
+
+export const updateProductController = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { id } = req.params;
+        const product = req.body;
+        const useCase = new UpdateProduct(productRepository);
+        const updatedProduct = await useCase.execute(id, product);
+        res.json(updatedProduct);
     } catch (error: any) {
         res.status(error.statusCode || 500).json({ message: error.message });
     }

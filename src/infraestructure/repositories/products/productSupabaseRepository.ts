@@ -3,6 +3,7 @@ import { Product } from "../../../domain/entities/products/product";
 import supabaseClient  from "../../../config/supabaseClient";
 
 export class ProductSupabaseRepository implements ProductRepository {
+   
     async getProducts(): Promise<Product[]> {
         const {data, error} = await supabaseClient
             .from('products')
@@ -40,5 +41,20 @@ export class ProductSupabaseRepository implements ProductRepository {
         }
 
         return data as Product | null;
+    }
+
+    async updateProductId(id: string, product: Product): Promise<Product> {
+        const {data, error} = await supabaseClient
+            .from('products')
+            .update(product)
+            .eq('id', id)
+            .select('*')
+            .single();
+
+        if (error) {
+            throw new Error(`Error updating product: ${error.message}`);
+        }
+
+        return data as Product;
     }
 }
