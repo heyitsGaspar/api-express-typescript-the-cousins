@@ -4,10 +4,13 @@ import supabaseClient  from "../../../config/supabaseClient";
 
 export class ProductSupabaseRepository implements ProductRepository {
    
-    async getProducts(): Promise<Product[]> {
+    async getProducts({ page, limit }: { page: number, limit: number }): Promise<Product[]> {
+        const from = (page - 1) * limit;
+        const to = page * limit;
         const {data, error} = await supabaseClient
             .from('products')
             .select ('*')
+            .range(from, to) // Supabase uses zero-based indexing
 
         if (error){
             throw new Error(`Error fetching products: ${error.message}`);

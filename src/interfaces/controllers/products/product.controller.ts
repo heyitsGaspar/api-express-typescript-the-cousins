@@ -4,13 +4,15 @@ import { ProductSupabaseRepository } from '../../../infraestructure/repositories
 import { CreateProduct } from '../../../application/use-cases/products/createProduct';
 import { GetProductById } from '../../../application/use-cases/products/getProductById';
 import { UpdateProduct } from '../../../application/use-cases/products/updateProduct';
+import { paginationSchema } from '../../validators/paginationSchema';
 
 
 const productRepository = new ProductSupabaseRepository();
 export const getProductsController = async (req: Request, res: Response, next: NextFunction) => {
     try {   
+        const { page, limit } = paginationSchema.parse(req.query);
         const useCase = new GetAllProductUseCase(productRepository);
-        const products = await useCase.execute();
+        const products = await useCase.execute({ page, limit });
         res.json(products);
     } catch (error: any) {
         res.status(error.statusCode || 500).json({ message: error.message });
