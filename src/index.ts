@@ -1,5 +1,6 @@
 import express, {Request, Response} from 'express';
 import productRouter from './interfaces/routes/products.routes';
+import usersRouter from './interfaces/routes/users.routes';
 import { errorHandler } from './interfaces/middlewares/errorHandler';
 import { notFound } from './interfaces/middlewares/notFound';
 
@@ -15,6 +16,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.use('/products', productRouter);
+app.use('/users', usersRouter);
 
 app.use(notFound);
 app.use(errorHandler);
